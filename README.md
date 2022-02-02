@@ -21,4 +21,5 @@ npm test
 ```sh
 npm run storybook
 ```
-Screenshot ("https://github.com/fathel80/scheduler/tree/master/screenshots")
+
+!["screenshot of FullView"]("https://github.com/fathel80/scheduler/blob/master/screenshots/FullView.png")
