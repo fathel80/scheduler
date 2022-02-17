@@ -4,7 +4,7 @@ import InterviewerList from 'components/InterviewerList';
 
 const Form = (props) => {
   
-  //  {STUDENT, INTERVIEWER, INTERVIERS, ONSAVE, ONCANCEL}
+  //  {student, interviewer, interviewers, onSave, onCancel}
   const [student, setStudent] = useState(props.student || "");
   const [interviewer, setInterviewer] = useState(props.interviewer || null);
   const [error, setError] = useState('')
@@ -20,7 +20,7 @@ const Form = (props) => {
     props.onCancel()
   }
   
-//FORM VALIDATION
+// Form Validation
 function validate() {
   if(student === '') {
     setError('student name cannot be blank')

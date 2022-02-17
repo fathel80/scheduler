@@ -1,91 +1,68 @@
-import React, { useState } from "react";
+import React from "react";
 
 import { render, cleanup } from "@testing-library/react";
-import Form from "components/Appointment/Form";
-import { fireEvent } from "@testing-library/react";
+
+import Appointment from "components/Appointment/index";
+
 
 afterEach(cleanup);
 
-describe("Form", () => {
-  const interviewers = [
+const state = {
+  days: [
     {
+      id: 1,
+      name: "Monday",
+      appointments: [1, 2, 3],
+      interviewers: [2],
+    },
+    {
+      id: 2,
+      name: "Tuesday",
+      appointments: [4, 5],
+      interviewers: [1, 2],
+    },
+  ],
+  appointments: {
+    1: { id: 1, time: "12pm", interview: null },
+    2: { id: 2, time: "1pm", interview: null },
+    3: {
+      id: 3,
+      time: "2pm",
+      interview: { student: "Archie Cohen", interviewer: 2 },
+    },
+    4: { id: 4, time: "3pm", interview: null },
+    5: {
+      id: 5,
+      time: "4pm",
+      interview: { student: "Chad Takahashi", interviewer: 2 },
+    },
+  },
+  interviewers: {
+    1: {
       id: 1,
       name: "Sylvia Palmer",
       avatar: "https://i.imgur.com/LpaY82x.png",
     },
-  ];
+    2: {
+      id: 2,
+      name: "Tori Malcolm",
+      avatar: "https://i.imgur.com/Nmx0Qxo.png",
+    },
+  },
+};
 
-  it("renders without student name if not provided", () => {
-    const { getByPlaceholderText } = render(
-      <Form interviewers={interviewers} />
-    );
-    expect(getByPlaceholderText("Enter Student Name")).toHaveValue("");
-  });
+describe("Test for Appointment", () => {
+  const bookInterview = jest.fn();
+  const cancelInterview = jest.fn();
 
-  it("renders with initial student name", () => {
-    const { getByTestId } = render(
-      <Form interviewers={interviewers} student="Lydia Miller-Jones" />
-    );
-    expect(getByTestId("student-name-input")).toHaveValue("Lydia Miller-Jones");
-  });
-
-  it("validates that the student name is not blank", () => {
-    /* 1. validation is shown */
-    const onSave = jest.fn();
-    const { getByText } = render(
-      <Form interviewers={interviewers} onSave={onSave} />
-    );
-    fireEvent.click(getByText("Save"));
-
-    expect(getByText(/student name cannot be blank/i)).toBeInTheDocument();
-    expect(onSave).not.toHaveBeenCalled();
-  });
-
-  it("can successfully save after trying to submit an empty student name", () => {
-    const onSave = jest.fn();
-    const { getByText, getByPlaceholderText, queryByText, getByAltText } =
-      render(<Form interviewers={interviewers} onSave={onSave} />);
-
-    fireEvent.click(getByText("Save"));
-
-    expect(getByText(/student name cannot be blank/i)).toBeInTheDocument();
-    expect(onSave).not.toHaveBeenCalled();
-
-    fireEvent.change(getByPlaceholderText("Enter Student Name"), {
-      target: { value: "Lydia Miller-Jones" },
-    });
-    fireEvent.click(getByAltText("Sylvia Palmer"));
-    fireEvent.click(getByText("Save"));
-
-    expect(queryByText(/student name cannot be blank/i)).toBeNull();
-
-    expect(onSave).toHaveBeenCalledTimes(1);
-    expect(onSave).toHaveBeenCalledWith("Lydia Miller-Jones", 1);
-  });
-
-  it("calls onCancel and resets the input field", () => {
-    const onCancel = jest.fn();
-    const { getByText, getByPlaceholderText, queryByText } = render(
-      <Form
-        interviewers={interviewers}
-        name="Lydia Mill-Jones"
-        onSave={jest.fn()}
-        onCancel={onCancel}
+  it("renders without crashing", () => {
+    render(
+      <Appointment
+        interview={state.appointments["2"].interview}
+        interviewers={state.interviewers["2"]}
+        cancelInterview={cancelInterview}
+        bookInterview={bookInterview}
       />
     );
-
-    fireEvent.click(getByText("Save"));
-
-    fireEvent.change(getByPlaceholderText("Enter Student Name"), {
-      target: { value: "Lydia Miller-Jones" },
-    });
-
-    fireEvent.click(getByText("Cancel"));
-
-    expect(queryByText(/student name cannot be blank/i)).toBeNull();
-
-    expect(getByPlaceholderText("Enter Student Name")).toHaveValue("");
-
-    expect(onCancel).toHaveBeenCalledTimes(1);
   });
 });
