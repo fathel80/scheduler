@@ -1,6 +1,6 @@
 import React from "react";
 
-import { render, cleanup } from "@testing-library/react";
+import { render, cleanup, getByText } from "@testing-library/react";
 
 import DayListItem from "components/DayListItem";
 
@@ -11,16 +11,16 @@ it("renders without crashing", () => {
 });
 
 it("renders 'no spots remaining' when there are 0 spots", () => {
-  const { getByText } = render(<DayListItem name="Monday" spots={0} />);
-  expect(getByText("no spots remaining")).toBeInTheDocument();
+  const { getByTestId } = render(<DayListItem name="Monday" spots={0} />);
+  expect(getByTestId("spotsRemaining")).toHaveTextContent("no");
 });
 
 it("renders '1 spot remaining' when there is 1 spot", () => {
-  const { getByText } = render(<DayListItem name="Monday" spots={1} />);
-  expect(getByText("1 spot remaining")).toBeInTheDocument();
+  const { getByTestId } = render(<DayListItem name="Monday" spots={1} />);
+  expect(getByTestId("spotsRemaining")).toHaveTextContent("1");
 });
 
 it("renders '2 spots remaining' when there are 2 spots", () => {
-  const { getByText } = render(<DayListItem name="Monday" spots={2} />);
-  expect(getByText("2 spots remaining")).toBeInTheDocument();
+  const { getByTestId } = render(<DayListItem name="Monday" spots={2} />);
+  expect(getByTestId("spotsRemaining")).toHaveTextContent("2");
 });
